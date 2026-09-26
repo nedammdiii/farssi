@@ -350,4 +350,36 @@ ol.qs .quote { display: block; padding-right: 3mm; font-family: "Naskh", "Vazir"
 .divider::after { background: linear-gradient(to right, transparent, var(--gold)); }
 
 /* نشانگر شماره‌صفحه‌ی فهرست (نامرئی؛ فقط برای build.cjs) */
-.mk { position: absolute; left: 2mm; bottom: .5mm; font-size: 2px; line-height: 1; color: var(--navy-2); }
+.mk { font-family: monospace; position: absolute; left: 2mm; bottom: .5mm; font-size: 2px; line-height: 1; color: var(--navy-2); }
+
+/* ---------- افزوده‌ها برای فایل‌های jz ---------- */
+.verse-block .verse.single { grid-template-columns: 1fr; }
+.verse-block .verse.single .m1 { text-align: center; }
+.verse-block .verse + .verse, .verse-block .prose + .prose, .verse-block .verse + .prose, .verse-block .prose + .verse { border-top: 1px dashed #e6dccb; }
+
+.sub-head {
+  display: flex; align-items: center; gap: 3mm; margin: 6mm 0 3.5mm; break-after: avoid;
+}
+.sub-head span {
+  background: linear-gradient(135deg, var(--gold) 0%, #cfa24b 100%); color: #fff;
+  font-weight: 800; font-size: 11.5pt; padding: .8mm 6mm; border-radius: 0 6mm 6mm 0;
+  box-shadow: 0 .6mm 0 rgba(0,0,0,.08);
+}
+.sub-head::after { content: ""; flex: 1; height: 1.2px; background: linear-gradient(to left, transparent, var(--gold)); }
+
+.section-title { break-after: avoid; }
+ul.plain { margin: 0 0 3mm; padding-right: 6mm; }
+ul.plain li { margin-bottom: .6mm; }
+ul.plain li::marker { color: var(--gold); }
+
+ol.qs > li .sub { display: block; padding-right: 3mm; font-size: 10pt; }
+ol.qs > li .quote + .sub, ol.qs > li .sub + .quote { margin-top: .4mm; }
+
+table.grid-table { margin: 0 0 5mm; }
+table.grid-table td { font-size: 9.6pt; }
+table.grid-table td:first-child { font-weight: 700; color: var(--navy); }
+
+.answers-title { margin-top: 5mm; }
+.box p:last-child { margin-bottom: 0; }
+.box .notes { display: flex; flex-wrap: wrap; gap: 1.6mm; }
+.opts.one { grid-template-columns: 1fr; }

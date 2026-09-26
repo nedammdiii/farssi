@@ -69,6 +69,7 @@ async function print(browser, out) {
 
 (async () => {
   fs.mkdirSync(OUT_DIR, { recursive: true });
+  execFileSync("python3", [path.join(ROOT, "jz2html.py")], { stdio: "inherit" });
   const browser = await chromium.launch();
 
   // مرحله‌ی ۱: پیدا کردن صفحه‌ی هر نشانگر فهرست

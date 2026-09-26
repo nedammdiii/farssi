@@ -18,7 +18,7 @@ def markers(pdf):
     found = {}
     with fitz.open(pdf) as doc:
         for i, page in enumerate(doc):
-            for m in re.findall(r"@@([A-Za-z0-9_-]+)@@", page.get_text()):
+            for m in re.findall(r"@@\s*([A-Za-z0-9_-]+)\s*@@", page.get_text()):
                 found.setdefault(m, i + 1)
     print(json.dumps(found))
 
