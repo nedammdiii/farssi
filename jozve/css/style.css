@@ -383,3 +383,16 @@ table.grid-table td:first-child { font-weight: 700; color: var(--navy); }
 .box p:last-child { margin-bottom: 0; }
 .box .notes { display: flex; flex-wrap: wrap; gap: 1.6mm; }
 .opts.one { grid-template-columns: 1fr; }
+
+/* ---------- فهرست شماره‌دار چندستونی (پیوست‌ها) ---------- */
+ol.wlist {
+  margin: 0 0 5mm; padding: 2.5mm 7mm 2.5mm 3mm; column-gap: 6mm; column-rule: 1px dashed var(--line);
+  background: #fff; border: 1px solid var(--line); border-radius: 2.5mm; font-size: 9.4pt; line-height: 1.75;
+}
+ol.wlist li { break-inside: avoid; padding-right: .5mm; }
+ol.wlist li::marker { color: var(--gold); font-weight: 800; font-size: 8.4pt; }
+table.grid-table td { text-align: right; hyphens: none; }
+table.grid-table thead { display: table-header-group; }
+table.grid-table tr { break-inside: avoid; }
+table.grid-table tbody tr:nth-child(even) td { background: #fcfaf5; }
+table.grid-table tbody tr:nth-child(odd) td { background: #fff; }

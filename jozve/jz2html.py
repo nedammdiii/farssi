@@ -8,6 +8,8 @@
   @chips a | b | c         برچسب‌های سرِ درس
   @card k=v | k=v          کارت شناسنامه
   @about ...               درون‌مایه (ردیف پهن کارت)
+  @aboutk ...              برچسب ردیف پهن (پیش‌فرض: درون‌مایه)
+  @num 1                   شماره‌ی بیت بعدی را از نو تنظیم می‌کند
   ## عنوان                 عنوان بخش
   ### عنوان                زیرعنوان نواری (گنج حکمت، شعرخوانی، ...)
   > مصراع ۱ // مصراع ۲     بیت (چند خط پشت‌سرهم = یک بلوک)
@@ -17,6 +19,7 @@
   [box نوع عنوان] ... [/box]   جعبه (zabani adabi fekri tarikh warn tip)
   vocab:  (سپس خط‌های «واژه = معنی»)
   imla: و۱، و۲، ...
+  wlist4 [شروع]  (سپس هر خط یک مدخل؛ فهرست شماره‌دار چندستونی تا خط خالی)
   table: س۱ | س۲  (سپس خط‌های «| خ۱ | خ۲»)
   qhead عنوان | زیرنویس
   qg نوع عنوان             گروه سؤال
@@ -96,7 +99,7 @@ class Doc:
             n = max(1, len(cells))
             about = ""
             if "about" in h:
-                about = f'<div class="wide"><div class="k">درون‌مایه</div><div class="v">{inline(h["about"])}</div></div>'
+                about = f'<div class="wide"><div class="k">{h.get("aboutk", "درون‌مایه")}</div><div class="v">{inline(h["about"])}</div></div>'
             self.out.append(f'<div class="id-card" style="grid-template-columns:repeat({n},1fr)">{"".join(cells)}{about}</div>')
 
     # ---------- بلوک‌ها ----------
@@ -150,7 +153,10 @@ class Doc:
             head, *rows = self.buf
             ths = "".join(f"<th>{inline(c)}</th>" for c in head)
             trs = "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows)
-            self.out.append(f'<table class="vocab grid-table"><tr>{ths}</tr>{trs}</table>')
+            self.out.append(f'<table class="vocab grid-table"><thead><tr>{ths}</tr></thead><tbody>{trs}</tbody></table>')
+        elif self.mode == "wlist":
+            lis = "".join(f"<li>{inline(w)}</li>" for w in self.buf)
+            self.out.append(f'<ol class="wlist" start="{self.wstart}" style="column-count:{self.wcols}">{lis}</ol>')
         self.mode = None
         self.buf = []
 
@@ -176,11 +182,13 @@ class Doc:
         s = raw.rstrip("\n")
         st = s.strip()
 
-        if self.mode in ("vocab", "table"):
+        if self.mode in ("vocab", "table", "wlist"):
             if not st:
                 self.close_mode()
                 return
-            if self.mode == "vocab":
+            if self.mode == "wlist":
+                self.buf.append(st)
+            elif self.mode == "vocab":
                 w, _, m = st.partition("=")
                 self.buf.append((w.strip(), m.strip()))
             else:
@@ -214,6 +222,10 @@ class Doc:
 
         if st.startswith("@"):
             key, _, val = st[1:].partition(" ")
+            if key == "num":
+                self.close_block()
+                self.verse_no = int(val.strip() or 1) - 1
+                return
             if key == "answers":
                 self.close_all()
                 self.close_qg()
@@ -290,6 +302,14 @@ class Doc:
             self.close_all()
             self.mode = "table"
             self.buf = [[c.strip() for c in st[6:].split("|")]]
+            return
+        if st.startswith("wlist"):
+            self.close_all()
+            self.mode = "wlist"
+            parts = st.split()
+            self.wcols = int(re.sub(r"\D", "", parts[0]) or 4)
+            self.wstart = int(parts[1]) if len(parts) > 1 else 1
+            self.buf = []
             return
         if st.startswith("imla:"):
             self.close_all()
